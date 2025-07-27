@@ -1,0 +1,1 @@
+from .dependicies import get_rag_service
