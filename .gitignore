@@ -1,0 +1,11 @@
+.env
+
+/dumps
+/.vscode
+/qdrant_data
+
+*__pycache__
+
+/notebooks
+
+/test
