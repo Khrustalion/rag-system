@@ -1,1 +1,1 @@
-from .dependicies import get_rag_service
+from .dependicies import get_rag_service, get_rag_service_aa
