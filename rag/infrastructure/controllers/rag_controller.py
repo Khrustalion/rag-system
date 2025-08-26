@@ -4,7 +4,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from starlette.responses import JSONResponse
 
 from rag.infrastructure.services import RAGService
-from rag.infrastructure.controllers import get_rag_service
+from rag.infrastructure.controllers import get_rag_service_aa
 from rag.application.dto import PostRequest, PostResponse
 
 router = APIRouter(
@@ -16,7 +16,7 @@ router = APIRouter(
 @router.post("/generate_answer")
 def generate_answer(
     dto_request: PostRequest,
-    rag_service: Annotated[RAGService, Depends(get_rag_service)],
+    rag_service: Annotated[RAGService, Depends(get_rag_service_aa)],
 ):
     try:
         query: str = dto_request.query

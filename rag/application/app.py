@@ -7,7 +7,7 @@ from fastapi.responses import JSONResponse, RedirectResponse
 from starlette import status
 from starlette.middleware.cors import CORSMiddleware
 
-from rag.infrastructure.controllers import get_rag_service
+from rag.infrastructure.controllers import get_rag_service_aa
 from rag.infrastructure.controllers.routers import routers
 
 load_dotenv()
@@ -15,7 +15,7 @@ load_dotenv()
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    _ = get_rag_service()
+    _ = get_rag_service_aa()
     yield
 
 
