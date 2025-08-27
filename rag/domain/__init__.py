@@ -3,5 +3,6 @@ from .i_document_repository import IDocumentRepository
 from .i_generator import IGenerator
 from .i_vectorizer import IVectorizer
 from .i_rag_service import IRAGService
+from .i_document_service import IDocumentService
 
 __all__ = ["Document", "IDocumentRepository", "IGenerator", "IVectorizer"]

@@ -13,20 +13,26 @@ class RAGServiceAA:
 
         base_dir = Path(__file__).resolve().parent.parent.parent
         data_dir = base_dir / "data"
-        mapping_path = data_dir / "user2vector.json"
+        self.mapping_path = data_dir / "user2vector.json"
 
-        if not mapping_path.is_file():
-            raise FileNotFoundError(f"Mapping file not found: {mapping_path}")
-
-        with mapping_path.open("r", encoding="utf-8") as f:
-            self.map_user2vecstor = json.load(f)
+        if not self.mapping_path.is_file():
+            with self.mapping_path.open("w", encoding="utf-8") as f:
+                json.dump({}, f, ensure_ascii=False, indent=2)
 
 
     def generate_answer(self, query: str, user_id: int) -> str:
-        vector_store_id = self.map_user2vecstor[str(user_id)]
+        with self.mapping_path.open("r", encoding="utf-8") as f:
+            try:
+                self.map_user2vecstor = json.load(f)
+            except json.JSONDecodeError:
+                self.map_user2vecstor = {}
 
-        if vector_store_id is None:
+        str_user_id = str(user_id)
+
+        if str_user_id not in self.map_user2vecstor:
             raise ValueError(f"Нет vector_store для user_id={user_id}")
+        
+        vector_store_id = self.map_user2vecstor[str_user_id]
 
         thread = self.openai_client.beta.threads.create(
             tool_resources={

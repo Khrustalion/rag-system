@@ -7,15 +7,21 @@ from fastapi.responses import JSONResponse, RedirectResponse
 from starlette import status
 from starlette.middleware.cors import CORSMiddleware
 
-from rag.infrastructure.controllers import get_rag_service_aa
+from rag.infrastructure.controllers import get_rag_service_aa, get_document_service
 from rag.infrastructure.controllers.routers import routers
+
+from openai import OpenAI
+
+import os
 
 load_dotenv()
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    _ = get_rag_service_aa()
+    openai_client = OpenAI(api_key=os.getenv("PROXYAPI_KEY"), base_url="https://api.proxyapi.ru/openai/v1")
+    app.state.rag_service = get_rag_service_aa(openai_client)
+    app.state.doc_service = get_document_service(openai_client)
     yield
 
 

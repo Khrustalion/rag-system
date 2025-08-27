@@ -6,16 +6,17 @@ from dotenv import load_dotenv
 import os
 
 from rag.infrastructure.retriever import Retriever, VectorizerOpenAI, GeneratorOpenAI
-from rag.infrastructure.repositories import QdrantRepository
-from rag.infrastructure.services import RAGService, RAGServiceAA
+from rag.infrastructure.repositories import QdrantRepository, RepositoryAA
+from rag.infrastructure.services import RAGService, RAGServiceAA, DocumentService
 
-def get_rag_service():
+from typing import Annotated
+
+def get_rag_service(openai_client: OpenAI):
     load_dotenv()
 
     qdrant_client = QdrantClient(url=os.getenv("QDRANT_URL"), api_key=os.getenv("QDRANT_API"))
     qdrant_repository = QdrantRepository(qdrant_client)
 
-    openai_client = OpenAI(api_key=os.getenv("PROXYAPI_KEY"), base_url="https://api.proxyapi.ru/openai/v1")
     vectorizer = VectorizerOpenAI(openai_client)
     llm = GeneratorOpenAI(openai_client)
 
@@ -23,12 +24,21 @@ def get_rag_service():
 
     return RAGService(retriever, llm)
 
-
-def get_rag_service_aa():
+def get_openai_client():
     load_dotenv()
 
-    openai_client = OpenAI(api_key=os.getenv("PROXYAPI_KEY"), base_url="https://api.proxyapi.ru/openai/v1")
+    return OpenAI(api_key=os.getenv("PROXYAPI_KEY"), base_url="https://api.proxyapi.ru/openai/v1")
 
+
+def get_document_service(openai_client: OpenAI):
+    repository = RepositoryAA(openai_client)
+
+    return DocumentService(repository)
+    
+    
+
+def get_rag_service_aa(openai_client: OpenAI):
+    load_dotenv()
     instructions = """"Вы — Ассистент по внутренним документам компании. Ваша единственная задача — отвечать на вопросы пользователя, извлекая информацию из внутренних документов с помощью встроенного vector_store.
 
                 Правила работы:
