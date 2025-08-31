@@ -39,9 +39,9 @@ jobs:
         uses: docker/build-push-action@v4
         with:
           context: .
-          file: ./Dockerfile
+          file: ./Dockerfile.backend
           push: true
-          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/one-punch-ml:latest
+          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/rag-system:latest
           cache-from: type=local,src=/tmp/.buildx-cache
           cache-to: type=local,dest=/tmp/.buildx-cache-new
 
